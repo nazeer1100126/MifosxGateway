@@ -2,4 +2,4 @@
 
 ## Summary
 
-MifosGateway provides a RESTful interface to send SMS and EMAILS
+Mifosx Gateway provides a RESTful interface to send SMS and EMAIL
