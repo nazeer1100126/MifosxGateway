@@ -1,5 +1,7 @@
 package org.apache.messagegateway.sms.providers;
 
+import java.util.Collection;
+
 import org.apache.messagegateway.exception.MessageGatewayException;
 import org.apache.messagegateway.sms.domain.SMSBridge;
 import org.apache.messagegateway.sms.domain.SMSMessage;
@@ -56,7 +58,7 @@ public class SMSProviderFactory implements ApplicationContextAware {
 			}
 			if (bridge.getProviderName().contains("Twilio")) {
 				provider = this.applicationContext.getBean(TwilioMessageProvider.class);
-			} else if (bridge.getProviderName().contains("Twilio")) {
+			} else if (bridge.getProviderName().contains("InfoBip")) {
 				provider = this.applicationContext.getBean(InfoBipMessageProvider.class);
 			}
 			if (provider == null)
@@ -66,6 +68,32 @@ public class SMSProviderFactory implements ApplicationContextAware {
 		} catch (SMSBridgeNotFoundException | MessageGatewayException | ProviderNotDefinedException e) {
 			message.setDeliveryErrorMessage(e.getMessage());
 			message.setDeliveryStatus(SmsMessageStatusType.FAILED.getValue());
+		}
+	}
+	
+	public void sendShortMessage(final Collection<SMSMessage> messages) {
+		
+		for(SMSMessage message: messages) {
+			SMSBridge bridge = this.providerDetailsRepository.findByIdAndTenantId(message.getProviderId(),
+					message.getTenantId());
+			SMSProvider provider = null;
+			try {
+				if (bridge == null) {
+					throw new SMSBridgeNotFoundException(message.getTenantId(), message.getProviderId());
+				}
+				if (bridge.getProviderName().contains("Twilio")) {
+					provider = this.applicationContext.getBean(TwilioMessageProvider.class);
+				} else if (bridge.getProviderName().contains("InfoBip")) {
+					provider = this.applicationContext.getBean(InfoBipMessageProvider.class);
+				}
+				if (provider == null)
+					throw new ProviderNotDefinedException();
+				provider.sendMessage(bridge, message);
+				message.setDeliveryStatus(SmsMessageStatusType.SENT.getValue());
+			} catch (SMSBridgeNotFoundException | MessageGatewayException | ProviderNotDefinedException e) {
+				message.setDeliveryErrorMessage(e.getMessage());
+				message.setDeliveryStatus(SmsMessageStatusType.FAILED.getValue());
+			}
 		}
 	}
 }

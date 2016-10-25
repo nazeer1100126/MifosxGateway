@@ -3,12 +3,8 @@ package org.apache.messagegateway.sms.service;
 import java.util.Collection;
 import java.util.Date;
 
-import org.apache.messagegateway.sms.domain.SMSBridge;
 import org.apache.messagegateway.sms.domain.SMSMessage;
-import org.apache.messagegateway.sms.exception.SMSBridgeNotFoundException;
-import org.apache.messagegateway.sms.providers.SMSProvider;
 import org.apache.messagegateway.sms.providers.SMSProviderFactory;
-import org.apache.messagegateway.sms.providers.impl.twilio.TwilioMessageProvider;
 import org.apache.messagegateway.sms.repository.SmsOutboundMessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,12 +27,12 @@ public class SMSMessageService {
 		Date date = new Date() ;
 		for(SMSMessage message: messages) {
 			message.setSubmittedOnDate(date);
-			sendMessage(message);
 		}
 		this.smsOutboundMessageRepository.save(messages) ;
+		this.sendMessage(messages);
 	}
 	
-	private void sendMessage(final SMSMessage message) {
+	private void sendMessage(final Collection<SMSMessage> message) {
 		this.smsProviderFactory.sendShortMessage(message);
 	}
 }

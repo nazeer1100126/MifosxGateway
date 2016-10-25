@@ -17,6 +17,7 @@ import com.twilio.sdk.TwilioRestClient;
 import com.twilio.sdk.TwilioRestException;
 import com.twilio.sdk.resource.factory.MessageFactory;
 import com.twilio.sdk.resource.instance.Account;
+import com.twilio.sdk.resource.instance.Message;
 
 @Service(value="TwilioSMS")
 public class TwilioMessageProvider implements SMSProvider {
@@ -30,6 +31,7 @@ public class TwilioMessageProvider implements SMSProvider {
     @Override
     public void sendMessage(final SMSBridge smsBridgeConfig, final SMSMessage message)
         throws MessageGatewayException {
+    	//Based on message id, register call back. so that we get notification from Twilio about message status
         final List<NameValuePair> messageParams = new ArrayList<NameValuePair>();
         messageParams.add(new BasicNameValuePair("From", smsBridgeConfig.getPhoneNo()));
         messageParams.add(new BasicNameValuePair("To", "+" + message.getMobileNumber()));
@@ -40,7 +42,7 @@ public class TwilioMessageProvider implements SMSProvider {
 
         try {
             logger.info("Sending SMS to " + message.getMobileNumber() + " ...");
-            messageFactory.create(messageParams);
+            Message m1 = messageFactory.create(messageParams);
         } catch (TwilioRestException trex) {
             logger.error("Could not send message, reason:", trex);
             throw new MessageGatewayException(trex.getMessage());

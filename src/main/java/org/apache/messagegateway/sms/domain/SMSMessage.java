@@ -97,6 +97,14 @@ public class SMSMessage extends AbstractPersistableCustom<Long> {
 		return internalId;
 	}
 
+	public void setExternalId(final String externalId) {
+		this.externalId = externalId ;
+	}
+	
+	public String getExternalId() {
+		return this.externalId ;
+	}
+	
 	public void setInternalId(Long internalId) {
 		this.internalId = internalId;
 	}
@@ -151,6 +159,18 @@ public class SMSMessage extends AbstractPersistableCustom<Long> {
 	
 	public void setDeliveryStatus(final Integer status) {
 		this.deliveryStatus = status ;
+	}
+	
+	public void setDeliveryStatus(final SmsMessageStatusType status) {
+		this.deliveryStatus = status.getValue() ;
+	}
+	
+	public void setDeliveredOnDate(final Date deliveredOnDate) {
+		this.deliveredOnDate = deliveredOnDate ;
+	}
+	
+	public Integer getDeliveryStatus() {
+		return this.deliveryStatus ;
 	}
 	
 	@Override
