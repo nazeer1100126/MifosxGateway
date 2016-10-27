@@ -161,10 +161,6 @@ public class SMSMessage extends AbstractPersistableCustom<Long> {
 		this.deliveryStatus = status ;
 	}
 	
-	public void setDeliveryStatus(final SmsMessageStatusType status) {
-		this.deliveryStatus = status.getValue() ;
-	}
-	
 	public void setDeliveredOnDate(final Date deliveredOnDate) {
 		this.deliveredOnDate = deliveredOnDate ;
 	}

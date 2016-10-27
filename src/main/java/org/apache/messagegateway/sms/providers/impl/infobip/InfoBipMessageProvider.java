@@ -88,9 +88,9 @@ public class InfoBipMessageProvider implements SMSProvider {
 		message.setSubmittedOnDate(new Date());
 		if (!StringUtils.isEmpty(smsGatewayMessage.getExternalId())) {
 			message.setExternalId(smsGatewayMessage.getExternalId());
-			message.setDeliveryStatus(SmsMessageStatusType.SENT);
+			message.setDeliveryStatus(SmsMessageStatusType.SENT.getValue());
 		} else {
-			message.setDeliveryStatus(SmsMessageStatusType.FAILED);
+			message.setDeliveryStatus(SmsMessageStatusType.FAILED.getValue());
 		}
 		smsOutboundMessageRepository.save(message);
 	}
@@ -567,14 +567,15 @@ public class InfoBipMessageProvider implements SMSProvider {
 	private class SessionStateListenerImpl implements SessionStateListener {
 
 		@Override
-		public void onStateChange(SessionState newState, SessionState oldState, Object source) {
-
+		public void onStateChange(SessionState newState, SessionState oldState,
+				Session source) {
 			if (newState.equals(SessionState.CLOSED)) {
 
 				logger.info("Session closed");
 
 				reconnectAndBindSession();
 			}
+
 		}
 	}
 
@@ -675,7 +676,7 @@ public class InfoBipMessageProvider implements SMSProvider {
 
 			if (smsOutboundMessage != null) {
 				// update the status of the SMS message
-				smsOutboundMessage.setDeliveryStatus(smsGatewayDeliveryReport.getStatus());
+				smsOutboundMessage.setDeliveryStatus(smsGatewayDeliveryReport.getStatus().getValue());
 
 				switch (smsGatewayDeliveryReport.getStatus()) {
 				case DELIVERED:

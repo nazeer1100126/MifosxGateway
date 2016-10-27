@@ -25,12 +25,14 @@ public class SmsApiResource {
 		this.smsMessageService = smsMessageService ;
     }
 
-    @RequestMapping(value = "/{tenantId}", method = RequestMethod.POST, consumes = {"application/json"}, produces = {"application/json"})
-    public ResponseEntity<Void> sendShortMessage(@RequestBody final List<SMSMessage> payload) {
-    	this.smsMessageService.sendShortMessage(payload);
-       return new ResponseEntity<>(HttpStatus.ACCEPTED);
-    }
-    
+	@RequestMapping(value = "/{tenantId}", method = RequestMethod.POST, consumes = { "application/json" }, produces = { "application/json" })
+	public ResponseEntity<String> sendShortMessage(
+			@RequestBody final List<SMSMessage> payload) {
+		SmsApiResource.this.smsMessageService.sendShortMessage(payload);
+
+		return new ResponseEntity<>(HttpStatus.ACCEPTED);
+	}
+
     @RequestMapping(value = "/{tenantId}", method = RequestMethod.GET, consumes = {"application/json"}, produces = {"application/json"})
     public ResponseEntity<Void> getDeliveryStatus(@PathVariable("tenantId") final String tenantId, @RequestBody final String payload) {
        return new ResponseEntity<>(HttpStatus.OK);
