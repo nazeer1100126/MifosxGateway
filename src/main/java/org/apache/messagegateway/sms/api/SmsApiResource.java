@@ -1,7 +1,9 @@
 package org.apache.messagegateway.sms.api;
 
+import java.util.Collection;
 import java.util.List;
 
+import org.apache.messagegateway.sms.data.DeliveryStatusData;
 import org.apache.messagegateway.sms.domain.SMSMessage;
 import org.apache.messagegateway.sms.service.SMSMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +34,14 @@ public class SmsApiResource {
     }
     
     @RequestMapping(value = "/{tenantId}", method = RequestMethod.GET, consumes = {"application/json"}, produces = {"application/json"})
-    public ResponseEntity<Void> getDeliveryStatus(@PathVariable("tenantId") final String tenantId, @RequestBody final String payload) {
+    public ResponseEntity<Collection<DeliveryStatusData>> getDeliveryStatus(@PathVariable("tenantId") final String tenantId, @RequestBody final Collection<Long> messageIds) {
+    	Collection<DeliveryStatusData> deliveryStatus = this.smsMessageService.getDeliveryStatus(messageIds) ;
+    	return new ResponseEntity<>(deliveryStatus, HttpStatus.OK);
+    }
+    
+    @RequestMapping(value = "/{messageId}", method = RequestMethod.GET, consumes = {"application/json"}, produces = {"application/json"})
+    public ResponseEntity<Void> updateDeliveryStatus(@PathVariable("messageId") final Long messageId, @RequestBody final String payload) {
+    	System.out.println("SmsApiResource.getDeliveryStatus()");
        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

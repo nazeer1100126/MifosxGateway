@@ -28,7 +28,7 @@ public class SMSMessage extends AbstractPersistableCustom<Long> {
 	private Date submittedOnDate;
 
 	@Column(name = "delivered_on_date", nullable = true)
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date deliveredOnDate;
 
 	@Column(name = "delivery_status", nullable = false)
@@ -159,10 +159,6 @@ public class SMSMessage extends AbstractPersistableCustom<Long> {
 	
 	public void setDeliveryStatus(final Integer status) {
 		this.deliveryStatus = status ;
-	}
-	
-	public void setDeliveryStatus(final SmsMessageStatusType status) {
-		this.deliveryStatus = status.getValue() ;
 	}
 	
 	public void setDeliveredOnDate(final Date deliveredOnDate) {

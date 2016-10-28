@@ -13,7 +13,7 @@ public class SMSBridgeConfig extends AbstractPersistableCustom<Long>{
 
 	@ManyToOne(optional = false)
     @JoinColumn(name = "provider_id", referencedColumnName = "id", nullable = false)
-    private SMSBridge tenantProvider;
+    private SMSBridge bridge;
 	
 	@Column(name = "config_name", nullable = false)
 	private String configName ;
@@ -36,5 +36,9 @@ public class SMSBridgeConfig extends AbstractPersistableCustom<Long>{
 	
 	public String getConfigValue() {
 		return this.configValue ;
+	}
+	
+	public void setSMSBridge(final SMSBridge bridge) {
+		this.bridge = bridge ;
 	}
 }

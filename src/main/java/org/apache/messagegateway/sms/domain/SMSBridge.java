@@ -1,6 +1,7 @@
 package org.apache.messagegateway.sms.domain;
 
 import java.util.Collection;
+import java.util.Date;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -8,6 +9,8 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @Table(name="m_sms_bridge")
@@ -20,7 +23,7 @@ public class SMSBridge extends AbstractPersistableCustom<Long> {
 	private String phoneNo;
 
 	@Column(name = "provider_key", nullable = false)
-	private String providerAppKey;
+	private String providerAppKey; //In future we can use for some kind of authentication
 
 	@Column(name = "provider_name", nullable = false)
 	private String providerName;
@@ -28,8 +31,15 @@ public class SMSBridge extends AbstractPersistableCustom<Long> {
 	@Column(name = "description", nullable = false)
 	private String providerDescription;
 	
-	@com.fasterxml.jackson.annotation.JsonIgnore
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "tenantProvider", orphanRemoval = true, fetch = FetchType.EAGER)
+	@Column(name = "created_on", nullable = true)
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date createdOnDate;
+	
+	@Column(name = "last_modified_on", nullable = true)
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date modifiedOnDate;
+	
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "bridge", orphanRemoval = true, fetch = FetchType.EAGER)
 	public Collection<SMSBridgeConfig> bridgeConfigurations;
 
 	public SMSBridge() {
@@ -57,10 +67,18 @@ public class SMSBridge extends AbstractPersistableCustom<Long> {
 		this.providerDescription = providerDescription ;
 	}
 	
+	public void setTenantId(final String tenantId) {
+		this.tenantId = tenantId ;
+	}
+	
 	public String getTenantId() {
 		return tenantId;
 	}
 
+	public void setPhoneNo(final String phoneNo) {
+		this.phoneNo = phoneNo ;
+	}
+	
 	public String getPhoneNo() {
 		return phoneNo;
 	}
@@ -69,12 +87,24 @@ public class SMSBridge extends AbstractPersistableCustom<Long> {
 		return providerAppKey;
 	}
 
+	public void setProviderName(final String providerName) {
+		this.providerName = providerName ;
+	}
+	
 	public String getProviderName() {
 		return providerName;
 	}
 	
+	public void setProviderDescription(final String providerDescription) {
+		this.providerDescription = providerDescription ;
+	}
+	
 	public String getProviderDescription() {
 		return this.providerDescription ;
+	}
+	
+	public void setProviderAppKey(final String appkey) {
+		this.providerAppKey = appkey ;
 	}
 	
 	public Collection<SMSBridgeConfig> getBridgeConfigurations() {
@@ -90,5 +120,36 @@ public class SMSBridge extends AbstractPersistableCustom<Long> {
 			}
 		}
 		return configValue ;
+	}
+	
+	public void setCreatedDate(final Date createdOnDate) {
+		this.createdOnDate = createdOnDate ;
+	}
+	
+	public void setSMSBridgeToBridgeConfigs() {
+		if(this.bridgeConfigurations != null) {
+			for(SMSBridgeConfig config: this.bridgeConfigurations) {
+				config.setSMSBridge(this); 
+			}
+		}
+	}
+
+	public void setSmsBridgeConfig(final Collection<SMSBridgeConfig> bridgeConfigurations) {
+		this.bridgeConfigurations.clear(); 
+		this.bridgeConfigurations = bridgeConfigurations ;
+	}
+	public String generateApiKey() {
+		StringBuffer buff = new StringBuffer() ;
+		buff.append(tenantId) ;
+		buff.append(":") ;
+		buff.append(phoneNo) ;
+		buff.append(":") ;
+		buff.append(providerName) ;
+		buff.append(":") ;
+		SMSBridgeConfig config = this.bridgeConfigurations.iterator().next() ;
+		buff.append(config.getConfigName()) ;
+		buff.append(":") ;
+		buff.append(config.getConfigValue()) ;
+		return buff.toString();
 	}
 }

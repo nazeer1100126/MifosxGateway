@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ProviderConfigRepository
+public interface SMSBridgeConfigRepository
 		extends JpaRepository<SMSBridgeConfig, Long>, JpaSpecificationExecutor<SMSBridgeConfig> {
-	public SMSBridge findByTenantProvider(@Param("tenantProvider") final Long tenantProvider);
+	public SMSBridge findByBridge(@Param("bridge") final Long tenantProvider);
 }

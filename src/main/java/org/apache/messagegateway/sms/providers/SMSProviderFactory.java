@@ -9,7 +9,7 @@ import org.apache.messagegateway.sms.exception.ProviderNotDefinedException;
 import org.apache.messagegateway.sms.exception.SMSBridgeNotFoundException;
 import org.apache.messagegateway.sms.providers.impl.infobip.InfoBipMessageProvider;
 import org.apache.messagegateway.sms.providers.impl.twilio.TwilioMessageProvider;
-import org.apache.messagegateway.sms.repository.ProviderDetailsRepository;
+import org.apache.messagegateway.sms.repository.SMSBridgeRepository;
 import org.apache.messagegateway.sms.util.SmsMessageStatusType;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +22,10 @@ public class SMSProviderFactory implements ApplicationContextAware {
 
 	private ApplicationContext applicationContext;
 
-	private final ProviderDetailsRepository providerDetailsRepository;
+	private final SMSBridgeRepository providerDetailsRepository;
 
 	@Autowired
-	public SMSProviderFactory(final ProviderDetailsRepository providerDetailsRepository) {
+	public SMSProviderFactory(final SMSBridgeRepository providerDetailsRepository) {
 		this.providerDetailsRepository = providerDetailsRepository;
 	}
 
